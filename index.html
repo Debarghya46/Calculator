@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        html {
+            box-sizing: border-box;
+        }
+        *, *::before, *::after {
+            box-sizing: inherit;
+        }
+        body {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: linear-gradient(236deg, #74ebd5, #acb6e5);
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        .container {
+            max-width: 20em;
+        }
+        .calculator {
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+            max-width: 15em;
+            overflow: hidden;
+            background: #fff;
+        }
+        .calculator__display {
+            background-color: #222;
+            color: #fff;
+            font-size: 1.7em;
+            padding: 0.5em 0.75em;
+            text-align: right;
+            min-height: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            word-wrap: break-word;
+        }
+        .calculator__keys {
+            background-color: #999;
+            display: grid;
+            grid-gap: 1px;
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .calculator__keys button {
+            background-color: #fff;
+            padding: 0.5em 1.25em;
+            font-size: 1.2em;
+            border: none;
+            cursor: pointer;
+        }
+        .key--operator {
+            background-color: #eee;
+        }
+        .key--equal {
+            background-image: linear-gradient(to bottom, #fe886a, #ff7033);
+            grid-column: -2;
+            grid-row: 2 / span 3;
+        }
+    </style>
+
+    <script>
+        function addData(num) {
+            let display = document.getElementById("calculator__display");
+            let dataCal = display.innerHTML;
+            let lastChar = dataCal.slice(-1);
+            
+            if (/[+\-*/]/.test(lastChar) && /[+\-*/]/.test(num)) {
+                display.innerHTML = dataCal.slice(0, -1) + num;
+            } 
+            else if (dataCal.includes('.') && num === '.') {
+                return;
+            }
+            else if (dataCal === '0') {
+                display.innerHTML = num;
+            }
+            else {
+                display.innerHTML += num;
+            }
+        }
+
+        function allClear() {
+            document.getElementById("calculator__display").innerHTML = "0";
+        }
+
+        function calculate() {
+            let display = document.getElementById("calculator__display");
+            try {
+                display.innerHTML = new Function('return ' + display.innerHTML)();
+            } catch {
+                display.innerHTML = "Error";
+            }
+        }
+
+        function contentLoad() {
+            document.getElementById("calculator__display").contentEditable = true;
+        }
+
+        function backspace() {
+            let display = document.getElementById("calculator__display");
+            display.innerHTML = display.innerHTML.length > 1 ? display.innerHTML.slice(0, -1) : "0";
+        }
+    </script>
+</head>
+
+<body onload="contentLoad()">
+    <div class="container">
+        <div class="calculator">
+            <div class="calculator__display" id="calculator__display" contenteditable="true">0</div>
+            <div class="calculator__keys">
+                <button class="key--operator" onclick="addData('+')">+</button>
+                <button class="key--operator" onclick="addData('-')">-</button>
+                <button class="key--operator" onclick="addData('*')">&times;</button>
+                <button class="key--operator" onclick="addData('/')">÷</button>
+                <button onclick="addData(7)">7</button>
+                <button onclick="addData(8)">8</button>
+                <button onclick="addData(9)">9</button>
+                <button onclick="addData(4)">4</button>
+                <button onclick="addData(5)">5</button>
+                <button onclick="addData(6)">6</button>
+                <button onclick="addData(1)">1</button>
+                <button onclick="addData(2)">2</button>
+                <button onclick="addData(3)">3</button>
+                <button onclick="addData(0)">0</button>
+                <button onclick="addData('.')">.</button>
+                <button onclick="allClear()">AC</button>
+                <button onclick="backspace()">←</button>
+                <button class="key--equal" onclick="calculate()">=</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
